@@ -1,339 +1,587 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="RegexApp">
-  <!--  
-    原作者網址(Author Web):http://www.debuggex.com/
-    翻譯者(Translater):KeJyun
-    語言(Language):中文
-    翻譯版網址(Translate Web):http://kejyun.github.io/Debuggex-Chinese-Traditional/
-    版權宣告(Copyright):歡迎轉載 請註明出處
-  -->
-  <head>
-    <link type="text/css" href="./static/css/main.css" rel="stylesheet"/>
+    <!-- 原作者網址(Author Web):http://www.debuggex.com/ 翻譯者(Translater):KeJyun
+    語言(Language):中文 翻譯版網址(Translate Web):http://kejyun.github.io/Debuggex-Chinese-Traditional/
+    版權宣告(Copyright):歡迎轉載 請註明出處 -->
     
-    <script type="text/javascript" src="./static/js/main.js"></script>
+    <head>
+        <link type="text/css" href="./static/css/main.css" rel="stylesheet" />
+        <script type="text/javascript" src="./static/js/main.js">
+                
+        </script>
+        <meta charset="utf-8">
+        <title>
+            Debuggex: 正規表示式視覺化測試器 - 線上繁體中文版
+        </title>
+        <meta name="description" content="Debuggex allows you to figure out why your regular expression isn't working by walking through it step-by-step.">
+        <meta name="keywords" content="javascript,regex,regular expression,visual,nfa,dfa,state,debugger,helper,tester,match,random match">
+        <meta name="author" content="Sergiu Toarca">
+        <link href="./favicon.ico" rel="shortcut icon" />
+        <script type="text/javascript" src="./static/js/include.js">
+                
+        </script>
+        <script type="text/javascript">
+                $(function() {
+            $('#signin').click(function() {
+                navigator.id.request({});
+                return false;
+            });
+            $('#signout').click(function() {
+                navigator.id.logout();
+                return false;
+            });
+            var currentUser = null;
+            navigator.id.watch({
+                loggedInUser: currentUser,
+                onlogin: function(assertion) {
+                    if (assertion) {
+                        var $form = $("<form method=POST " + "      action='/login'>" + "  <input type='hidden' " + "         name='assertion' " + "         value='" + assertion + "' />" + "  <input type='hidden' " + "         name='came_from' " + "         value='http://www.debuggex.com/' />" + "  <input type='hidden' " + "         name='csrf_token' " + "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" + "</form>").appendTo($("body"));
+                        $form.submit();
+                    }
+                },
+                onlogout: function() {
+                    var $form = $("<form method=POST " + "      action='/logout'>" + "  <input type='hidden' " + "         name='came_from' " + "         value='http://www.debuggex.com/' />" + "  <input type='hidden' " + "         name='csrf_token' " + "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" + "</form>").appendTo($("body"));
+                    $form.submit();
+                }
+            });
+        });
+        </script>
+        <script type="text/javascript">
+                pyramid_globals = {};
+        </script>
+    </head>
     
-    
-    <meta charset="utf-8">
-    <title>
-    Debuggex: 正規表示式視覺化測試器 - 線上繁體中文版
-    </title>
-    
-    <meta name="description" content="Debuggex allows you to figure out why your regular expression isn't working by walking through it step-by-step.">
-    <meta name="keywords" content="javascript,regex,regular expression,visual,nfa,dfa,state,debugger,helper,tester,match,random match">
-    <meta name="author" content="Sergiu Toarca">
-    <link href="./favicon.ico" rel="shortcut icon"/>
+    <body ng-controller="RegexCtrl">
+        <div class="title-container clearfix">
+            <div class="nav lfloat">
+                <div class="lfloat" style="padding: 6px 0 0 10px;">
+                    <a href="./"><img src="./static/img/logo.png" alt="Debuggex Beta"/></a>
+                </div>
+                <span class="caption">
+                    <a href="http://www.debuggex.com/blog/" ng-click="noSeeRecentBlog = false"
+                    target="_blank">官方部落格</a>
+                    <span ng-show="noSeeRecentBlog" style="color:red;font-weight:900">
+                        !
+                    </span>
+                </span>
+                <span class="caption">
+                    <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4"
+                    target="_blank">影片導覽</a>
+                </span>
+                <span class="caption">
+                    <ul class="menu clearfix">
+                        <li>
+                            <a>範例 ▽</a>
+                            <ul>
+                                <li ng-repeat="example in examples">
+                                    <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </span>
+                <span class="caption">
+                    <div class="fb-like" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/"
+                    data-send="false" data-layout="button_count" data-width="450" data-show-faces="true"
+                    data-font="segoe ui" data-colorscheme="dark" data-action="recommend">
+                    </div>
+                </span>
+            </div>
+            <div class="nav rfloat">
+                <!-- <span class="caption">
 
-    
-    <script type="text/javascript" src="./static/js/include.js"></script>
-    <script type="text/javascript">$(function() {
-    $('#signin').click(function() { navigator.id.request({}); return false;});
-    $('#signout').click(function() { navigator.id.logout(); return false;});
-    var currentUser = null;
-    navigator.id.watch({
-    loggedInUser: currentUser,
-    onlogin: function(assertion) {
-    if (assertion) {
-    var $form = $("<form method=POST "+
-      "      action='/login'>" +
-      "  <input type='hidden' " +
-      "         name='assertion' " +
-      "         value='" + assertion + "' />" +
-      "  <input type='hidden' " +
-      "         name='came_from' "+
-      "         value='http://www.debuggex.com/' />" +
-      "  <input type='hidden' " +
-      "         name='csrf_token' "+
-      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
-    "</form>").appendTo($("body"));
-    $form.submit();
-    }
-    },
-    onlogout: function() {
-    var $form = $("<form method=POST "+
-      "      action='/logout'>" +
-      "  <input type='hidden' " +
-      "         name='came_from' "+
-      "         value='http://www.debuggex.com/' />" +
-      "  <input type='hidden' " +
-      "         name='csrf_token' "+
-      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
-    "</form>").appendTo($("body"));
-    $form.submit();
-    }
-    });
-    });
-    </script>
-    <script type="text/javascript">pyramid_globals = {};</script>
-  </head>
-  <body ng-controller="RegexCtrl">
-    <div class="title-container clearfix">
-      <div class="nav lfloat">
-        <div class="lfloat" style="padding: 6px 0 0 10px;">
-          <a href="./"><img src="./static/img/logo.png" alt="Debuggex Beta"/></a>
-        </div>
-        
-        <span class="caption">
-        <a href="http://www.debuggex.com/blog/" ng-click="noSeeRecentBlog = false" target="_blank">官方部落格</a>
-        <span ng-show="noSeeRecentBlog" style="color:red;font-weight:900">!</span>
-        </span>
-        <span class="caption">
-        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽</a>
-        </span>
-        <span class="caption">
-        <ul class="menu clearfix">
-          <li>
-            <a>範例 ▽</a>
-            <ul>
-              <li ng-repeat="example in examples">
-                <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        </span>
-        <span class="caption">
-        <div class="fb-like" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-font="segoe ui" data-colorscheme="dark" data-action="recommend"></div>
-        </span>
-      </div>
-      <div class="nav rfloat">
-        
-        <!-- <span class="caption">
+
+
         <a id="signin" onClick="_track('Top nav login');" href="/login">Login or Sign up</a>
+
+
+
         </span> -->
-      </div>
-    </div>
-    
-    <div class="sidepadded">
-      <div ng-model="re.w" class="slidearea {{re.w.cls}}"></div>
-      <div class="sa-message">
-        <span class="left-align" style="z-index:5;">
-        <label>
-          <input type="checkbox" ng-model="re.w.flags.i" class="flagcheck"/>
-          忽略大小寫 (i)
-        </label>
-        <label style="margin-left: 15px">
-          <input type="checkbox" ng-model="re.w.flags.m" class="flagcheck"/>
-          ^$ 比對每一行 (m)
-        </label>
-        </span>
-        <span class="center-align error">
-        <span ng-show="reError">{{reError}}</span>
-        <span ng-hide="reError">&nbsp;</span>
-        </span>
-      </div>
-    </div>
-    <div class="flash-container newstip">
-      <div class="flash flash-success">
-        <a target="_blank" onClick="_track('Newstip campaign')" href="http://www.igg.me/at/debuggex">贊助</a>
-        Debuggex原作者，讓Debuggex更加完善。
-      </div>
-    </div>
-    <div class="sidepadded">
-      <nfa></nfa>
-      <div ng-model="strs[0].w" class="slidearea multi-slidearea {{strs[0].w.cls}}">
-      </div>
-      <div class="sa-message">
-        <span class="center-align">
-        <span ng-show="strs[0].w.groups.length > 0">
-        <span class="antierror">比對成功</span>
-        </span>
-        <span ng-hide="strs[0].w.groups.length > 0">
-        <span class="error">比對失敗</span>
-        </span>
-        </span>
-      </div>
-      <div class="centered-text" style="margin-top:10px">
-        <div class="otherinfo" style="width:49.7%;">
-          <div ng-show="strs[0].w.groups.length > 1">
-            Captured groups:
-            <div ng-repeat="(key, value) in strs[0].w.groups">
-              <div style="padding-left:10px">
-                {{key}}: "<span class="bigspace">{{value}}</span>"
-              </div>
             </div>
-          </div>
         </div>
-        <div class="otherinfo" style="width:49.7%;">
-          <div ng-show="strs.length > 1">
-            隨機比對:
-            <div class="error" ng-show="randError">
-              {{randError}}
+        <div class="sidepadded">
+            <div ng-model="re.w" class="slidearea {{re.w.cls}}">
             </div>
-            <div ng-repeat="i in [1, 2]">
-              <div
-                ng-show="strs[i].w.cls"
-                ng-model="strs[i].w"
-                class="slidearea ro-slidearea {{strs[i].w.cls}}">
-              </div>
+            <div class="sa-message">
+                <span class="left-align" style="z-index:5;">
+                    <label>
+                        <input type="checkbox" ng-model="re.w.flags.i" class="flagcheck" />
+                        忽略大小寫 (i)
+                    </label>
+                    <label style="margin-left: 15px">
+                        <input type="checkbox" ng-model="re.w.flags.m" class="flagcheck" />
+                        ^$ 比對每一行 (m)
+                    </label>
+                </span>
+                <span class="center-align error">
+                    <span ng-show="reError">
+                        {{reError}}
+                    </span>
+                    <span ng-hide="reError">
+                        &nbsp;
+                    </span>
+                </span>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-    <div class="flash-container">
-    </div>
-    <div style="width:95%;margin-top:50px;margin-left:auto;margin-right:auto;text-align:center;">
-      <div style="display:inline-block">
-        <span style="font-weight:700">正規表示式參考資訊:</span>
-        <br/>
-        <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left">
-          <tbody>
-            <tr>
-              <td><span class="code">[abx-z]</span></td>
-              <td>符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)</td>
-            </tr>
-            <tr>
-              <td><span class="code">[^abx-z]</span></td>
-              <td>不符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a|b</span></td>
-              <td>a或b</td>
-            </tr>
-            <tr>
-              <td><span class="code">a?</span></td>
-              <td>0張或1張A士(a)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a*</span></td>
-              <td>0張或多張的A士(a)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a+</span></td>
-              <td>1張或多張以上的A士(a)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a{4}</span></td>
-              <td>4張A士(a)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a{4,8}</span></td>
-              <td>4~8張A士(a)</td>
-            </tr>
-            <tr>
-              <td><span class="code">a{9,}</span></td>
-              <td>9張以上A士(a)s</td>
-            </tr>
-            <tr>
-              <td><span class="code">(...)</span></td>
-              <td>擷取比對到的字串群組</td>
-            </tr>
-            <tr>
-              <td><span class="code">(?:...)</span></td>
-              <td>不擷取比對到的字串群組</td>
-            </tr>
-            <tr>
-              <td><span class="code">(?=...)</span></td>
-              <td>A lookahead</td>
-            </tr>
-            <tr>
-              <td><span class="code">(?!...)</span></td>
-              <td>A negative lookahead</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">^</span></td>
-              <td>字串開始位置</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">$</span></td>
-              <td>字串結束位置</td>
-            </tr>
-          </tbody>
-        </table>
-        <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left;">
-          <tbody>
-            <tr>
-              <td><span class="code code-escaped">\d</span></td>
-              <td>數字 (與<span class="code">[0-9]</span>表示式相同)</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\D</span></td>
-              <td>非數字 (與<span class="code">[^0-9]</span>表示式相同)</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\w</span></td>
-              <td>字元 (與<span class="code">[_a-zA-Z0-9]</span>表示式相同)</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\W</span></td>
-              <td>
-                非字元 (與<span class="code">[^_a-zA-Z0-9]</span>表示式相同)
-              </td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\s</span></td>
-              <td>空白字元</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\S</span></td>
-              <td>非空白字元</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\b</span></td>
-              <td>字元邊界</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\B</span></td>
-              <td>非字元邊界</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\n</span></td>
-              <td>換行</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\t</span></td>
-              <td>Tab</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\cY</span></td>
-              <td>The control character with the hex code Y</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\xYY</span></td>
-              <td>The character with the hex code YY</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\uYYYY</span></td>
-              <td>The character with the hex code YYYY</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">.</span></td>
-              <td>任何字元</td>
-            </tr>
-            <tr>
-              <td><span class="code code-escaped">\Y</span></td>
-              <td>第Y個擷取比對到的字串群組</td>
-            </tr>
-          </tbody>
-        </table>
-        <br/>
-        <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions" target="_blank">完整正規表示式參照</a>
-      </div>
-    </div>
-    <div style="margin-top:10px;max-width:600px;margin-left:auto;margin-right:auto;text-align:center;">
-      <a href="http://www.debuggex.com/libraries" target="_blank">函式庫</a>
-      |
-      <a href="mailto:debuggex@toarca.com">聯絡原作者</a>
-      |
-      <a href="http://blog.kejyun.com" target="_blank">譯者KeJyun部落格</a>
-    </div>
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=567946763231316";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        <div class="flash-container newstip">
+            <div class="flash flash-success">
+                <a target="_blank" onClick="_track('Newstip campaign')" href="http://www.igg.me/at/debuggex">贊助</a>
+                Debuggex原作者，讓Debuggex更加完善。
+            </div>
+        </div>
+        <div class="sidepadded">
+            <nfa>
+            </nfa>
+            <div ng-model="strs[0].w" class="slidearea multi-slidearea {{strs[0].w.cls}}">
+            </div>
+            <div class="sa-message">
+                <span class="center-align">
+                    <span ng-show="strs[0].w.groups.length > 0">
+                        <span class="antierror">
+                            比對成功
+                        </span>
+                    </span>
+                    <span ng-hide="strs[0].w.groups.length > 0">
+                        <span class="error">
+                            比對失敗
+                        </span>
+                    </span>
+                </span>
+            </div>
+            <div class="centered-text" style="margin-top:10px">
+                <div class="otherinfo" style="width:49.7%;">
+                    <div ng-show="strs[0].w.groups.length > 1">
+                        Captured groups:
+                        <div ng-repeat="(key, value) in strs[0].w.groups">
+                            <div style="padding-left:10px">
+                                {{key}}: "
+                                <span class="bigspace">
+                                    {{value}}
+                                </span>
+                                "
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="otherinfo" style="width:49.7%;">
+                    <div ng-show="strs.length > 1">
+                        隨機比對:
+                        <div class="error" ng-show="randError">
+                            {{randError}}
+                        </div>
+                        <div ng-repeat="i in [1, 2]">
+                            <div ng-show="strs[i].w.cls" ng-model="strs[i].w" class="slidearea ro-slidearea {{strs[i].w.cls}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flash-container">
+        </div>
+        <div style="width:95%;margin-top:50px;margin-left:auto;margin-right:auto;text-align:center;">
+            <div style="display:inline-block">
+                <span style="font-weight:700">
+                    正規表示式參考資訊:
+                </span>
+                <br/>
+                <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    [abx-z]
+                                </span>
+                            </td>
+                            <td>
+                                符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    [^abx-z]
+                                </span>
+                            </td>
+                            <td>
+                                不符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a|b
+                                </span>
+                            </td>
+                            <td>
+                                a或b
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a?
+                                </span>
+                            </td>
+                            <td>
+                                0張或1張A士(a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a*
+                                </span>
+                            </td>
+                            <td>
+                                0張或多張的A士(a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a+
+                                </span>
+                            </td>
+                            <td>
+                                1張或多張以上的A士(a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a{4}
+                                </span>
+                            </td>
+                            <td>
+                                4張A士(a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a{4,8}
+                                </span>
+                            </td>
+                            <td>
+                                4~8張A士(a)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    a{9,}
+                                </span>
+                            </td>
+                            <td>
+                                9張以上A士(a)s
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    (...)
+                                </span>
+                            </td>
+                            <td>
+                                擷取比對到的字串群組
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    (?:...)
+                                </span>
+                            </td>
+                            <td>
+                                不擷取比對到的字串群組
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    (?=...)
+                                </span>
+                            </td>
+                            <td>
+                                A lookahead
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code">
+                                    (?!...)
+                                </span>
+                            </td>
+                            <td>
+                                A negative lookahead
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    ^
+                                </span>
+                            </td>
+                            <td>
+                                字串開始位置
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    $
+                                </span>
+                            </td>
+                            <td>
+                                字串結束位置
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left;">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \d
+                                </span>
+                            </td>
+                            <td>
+                                數字 (與
+                                <span class="code">
+                                    [0-9]
+                                </span>
+                                表示式相同)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \D
+                                </span>
+                            </td>
+                            <td>
+                                非數字 (與
+                                <span class="code">
+                                    [^0-9]
+                                </span>
+                                表示式相同)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \w
+                                </span>
+                            </td>
+                            <td>
+                                字元 (與
+                                <span class="code">
+                                    [_a-zA-Z0-9]
+                                </span>
+                                表示式相同)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \W
+                                </span>
+                            </td>
+                            <td>
+                                非字元 (與
+                                <span class="code">
+                                    [^_a-zA-Z0-9]
+                                </span>
+                                表示式相同)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \s
+                                </span>
+                            </td>
+                            <td>
+                                空白字元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \S
+                                </span>
+                            </td>
+                            <td>
+                                非空白字元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \b
+                                </span>
+                            </td>
+                            <td>
+                                字元邊界
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \B
+                                </span>
+                            </td>
+                            <td>
+                                非字元邊界
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \n
+                                </span>
+                            </td>
+                            <td>
+                                換行
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \t
+                                </span>
+                            </td>
+                            <td>
+                                Tab
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \cY
+                                </span>
+                            </td>
+                            <td>
+                                The control character with the hex code Y
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \xYY
+                                </span>
+                            </td>
+                            <td>
+                                The character with the hex code YY
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \uYYYY
+                                </span>
+                            </td>
+                            <td>
+                                The character with the hex code YYYY
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    .
+                                </span>
+                            </td>
+                            <td>
+                                任何字元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="code code-escaped">
+                                    \Y
+                                </span>
+                            </td>
+                            <td>
+                                第Y個擷取比對到的字串群組
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions"
+                target="_blank">完整正規表示式參照</a>
+            </div>
+        </div>
+        <div style="margin-top:10px;max-width:600px;margin-left:auto;margin-right:auto;text-align:center;">
+            <a href="http://www.debuggex.com/libraries" target="_blank">函式庫</a>
+            |
+            <a href="mailto:debuggex@toarca.com">聯絡原作者</a>
+            |
+            <a href="http://blog.kejyun.com" target="_blank">譯者KeJyun部落格</a>
+        </div>
+        <div id="disqus_thread">
+        </div>
+        <script type="text/javascript">
+                        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'debuggex-chinese-traditional'; // required: replace example with your forum shortname
 
-      ga('create', 'UA-31063691-5', 'kejyun.github.io');
-      ga('send', 'pageview');
-    </script>
+                 /* * * DON'T EDIT BELOW THIS LINE * * */
+                 (function() {
+                    var dsq = document.createElement('script');
+                    dsq.type = 'text/javascript';
+                    dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+        </script>
+        <noscript>
+            Please enable JavaScript to view the
+            <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <div id="fb-root">
+        </div>
+        <script>
+                (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=567946763231316";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        </script>
+        <script>
+                      (function(i, s, o, g, r, a, m) {
+                  i['GoogleAnalyticsObject'] = r;
+                  i[r] = i[r] ||
+                  function() {
+                      (i[r].q = i[r].q || []).push(arguments)
+                  }, i[r].l = 1 * new Date();
+                  a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+                  a.async = 1;
+                  a.src = g;
+                  m.parentNode.insertBefore(a, m)
+              })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  </body>
+              ga('create', 'UA-31063691-5', 'kejyun.github.io');
+              ga('send', 'pageview');
+        </script>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'debuggex-chinese-traditional'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var s = document.createElement('script');
+        s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+        </script>
+    </body>
+
 </html>
