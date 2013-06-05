@@ -2516,3 +2516,10 @@ circle.secondary_marker.sa-brown {
   border: 1px solid #DDFFDD;
   color: #009933;
 }
+
+.col-organic{
+  display: none;
+}
+#disqus_thread{
+  min-width: 660px;
+}
