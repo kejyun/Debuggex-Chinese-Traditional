@@ -2516,10 +2516,7 @@ circle.secondary_marker.sa-brown {
   border: 1px solid #DDFFDD;
   color: #009933;
 }
-
-.col-organic{
-  display: none;
-}
-#disqus_thread{
-  min-width: 50%;
+.center_block{
+  width: 660px;
+  margin: 0 auto;
 }
