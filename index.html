@@ -73,16 +73,16 @@
         </div>
         
         <span class="caption">
-        <a href="http://www.debuggex.com/blog/" ng-click="noSeeRecentBlog = false" target="_blank">官方部落格(Blog)</a>
+        <a href="http://www.debuggex.com/blog/" ng-click="noSeeRecentBlog = false" target="_blank">官方部落格</a>
         <span ng-show="noSeeRecentBlog" style="color:red;font-weight:900">!</span>
         </span>
         <span class="caption">
-        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽(Tutorial)</a>
+        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽</a>
         </span>
         <span class="caption">
         <ul class="menu clearfix">
           <li>
-            <a>範例(Examples)<i class="icon-caret-down" style="margin-right:-7px"></i></a>
+            <a>範例<i class="icon-caret-down" style="margin-right:-7px"></i></a>
             <ul>
               <li ng-repeat="example in examples">
                 <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
@@ -92,7 +92,7 @@
         </ul>
         </span>
         <span class="caption">
-        <a ng-click="saveRegex()">Share this Expression</a>
+        <div class="fb-like" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-font="segoe ui" data-colorscheme="dark" data-action="recommend"></div>
         </span>
       </div>
       <div class="nav rfloat">
@@ -321,6 +321,14 @@
       |
       <a href="http://blog.kejyun.com" target="_blank">譯者KeJyun部落格</a>
     </div>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/zh_TW/all.js#xfbml=1&appId=567946763231316";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -330,5 +338,6 @@
       ga('create', 'UA-31063691-5', 'kejyun.github.io');
       ga('send', 'pageview');
     </script>
+
   </body>
 </html>
