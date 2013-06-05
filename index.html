@@ -8,7 +8,7 @@
     
     <meta charset="utf-8">
     <title>
-    Debuggex: 線上視覺化正規表示式測試器(繁體中文版)
+    Debuggex: 正規表示式視覺化測試器 - 線上繁體中文版
     </title>
     
     <meta name="description" content="Debuggex allows you to figure out why your regular expression isn't working by walking through it step-by-step.">
@@ -62,20 +62,20 @@
     <div class="title-container clearfix">
       <div class="nav lfloat">
         <div class="lfloat" style="padding: 6px 0 0 10px;">
-          <a href="/"><img src="./static/img/logo.png" alt="Debuggex Beta"/></a>
+          <a href="./"><img src="./static/img/logo.png" alt="Debuggex Beta"/></a>
         </div>
         
         <span class="caption">
-        <a href="/blog/" ng-click="noSeeRecentBlog = false">Blog</a>
+        <a href="http://www.debuggex.com/blog/" ng-click="noSeeRecentBlog = false" target="_blank">官方部落格(Blog)</a>
         <span ng-show="noSeeRecentBlog" style="color:red;font-weight:900">!</span>
         </span>
         <span class="caption">
-        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4">Tutorial</a>
+        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽(Tutorial)</a>
         </span>
         <span class="caption">
         <ul class="menu clearfix">
           <li>
-            <a>Examples<i class="icon-caret-down" style="margin-right:-7px"></i></a>
+            <a>範例(Examples)<i class="icon-caret-down" style="margin-right:-7px"></i></a>
             <ul>
               <li ng-repeat="example in examples">
                 <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
