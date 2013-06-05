@@ -120,9 +120,6 @@
         <span ng-show="reError">{{reError}}</span>
         <span ng-hide="reError">&nbsp;</span>
         </span>
-        <span class="right-align" style="z-index:5;">
-        <a ng-click="embed()" onclick="_track('embed');">Embed on StackOverflow</a>
-        </span>
       </div>
     </div>
     <div class="flash-container newstip">
@@ -183,47 +180,47 @@
           <tbody>
             <tr>
               <td><span class="code">[abx-z]</span></td>
-              <td>One character of: a, b, or the range x-z</td>
+              <td>符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)</td>
             </tr>
             <tr>
               <td><span class="code">[^abx-z]</span></td>
-              <td>One character except: a, b, or the range x-z</td>
+              <td>不符合a或b中其中一個字，或者在x~z範圍的字母(x,y,z)</td>
             </tr>
             <tr>
               <td><span class="code">a|b</span></td>
-              <td>a or b</td>
+              <td>a或b</td>
             </tr>
             <tr>
               <td><span class="code">a?</span></td>
-              <td>Zero or one a's</td>
+              <td>0張或1張A士(a)</td>
             </tr>
             <tr>
               <td><span class="code">a*</span></td>
-              <td>Zero or more a's</td>
+              <td>0張或多張的A士(a)</td>
             </tr>
             <tr>
               <td><span class="code">a+</span></td>
-              <td>One or more a's</td>
+              <td>1張或多張以上的A士(a)</td>
             </tr>
             <tr>
               <td><span class="code">a{4}</span></td>
-              <td>Exactly 4 a's</td>
+              <td>4張A士(a)</td>
             </tr>
             <tr>
               <td><span class="code">a{4,8}</span></td>
-              <td>Between (inclusive) 4 and 8 a's</td>
+              <td>4~8張A士(a)</td>
             </tr>
             <tr>
               <td><span class="code">a{9,}</span></td>
-              <td>9 or more a's</td>
+              <td>9張以上A士(a)s</td>
             </tr>
             <tr>
               <td><span class="code">(...)</span></td>
-              <td>A capturing group</td>
+              <td>擷取比對到的字串群組</td>
             </tr>
             <tr>
               <td><span class="code">(?:...)</span></td>
-              <td>A non-capturing group</td>
+              <td>不擷取比對到的字串群組</td>
             </tr>
             <tr>
               <td><span class="code">(?=...)</span></td>
