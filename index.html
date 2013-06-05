@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="RegexApp">
+  <head>
+    <link type="text/css" href="/static/css/main.css" rel="stylesheet"/>
+    
+    <script type="text/javascript" src="/static/js/main.js"></script>
+    
+    
+    <meta charset="utf-8">
+    <title>
+    Debuggex: The online visual regex tester
+    </title>
+    
+    <meta name="description" content="Debuggex allows you to figure out why your regular expression isn't working by walking through it step-by-step.">
+    <meta name="keywords" content="javascript,regex,regular expression,visual,nfa,dfa,state,debugger,helper,tester,match,random match">
+    <meta name="author" content="Sergiu Toarca">
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38496676-1']);
+    _gaq.push(['_trackPageview']);
+    var _track = function(action) {
+    _gaq.push(['_trackEvent', 'Engagement', action]);
+    };
+    (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = 'http://www.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+    
+    <script type="text/javascript" src="/static/js/include.js"></script>
+    <script type="text/javascript">$(function() {
+    $('#signin').click(function() { navigator.id.request({}); return false;});
+    $('#signout').click(function() { navigator.id.logout(); return false;});
+    var currentUser = null;
+    navigator.id.watch({
+    loggedInUser: currentUser,
+    onlogin: function(assertion) {
+    if (assertion) {
+    var $form = $("<form method=POST "+
+      "      action='/login'>" +
+      "  <input type='hidden' " +
+      "         name='assertion' " +
+      "         value='" + assertion + "' />" +
+      "  <input type='hidden' " +
+      "         name='came_from' "+
+      "         value='http://www.debuggex.com/' />" +
+      "  <input type='hidden' " +
+      "         name='csrf_token' "+
+      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
+    "</form>").appendTo($("body"));
+    $form.submit();
+    }
+    },
+    onlogout: function() {
+    var $form = $("<form method=POST "+
+      "      action='/logout'>" +
+      "  <input type='hidden' " +
+      "         name='came_from' "+
+      "         value='http://www.debuggex.com/' />" +
+      "  <input type='hidden' " +
+      "         name='csrf_token' "+
+      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
+    "</form>").appendTo($("body"));
+    $form.submit();
+    }
+    });
+    });
+    </script>
+    <script type="text/javascript">pyramid_globals = {};</script>
+  </head>
+  <body ng-controller="RegexCtrl">
+    <div class="title-container clearfix">
+      <div class="nav lfloat">
+        <div class="lfloat" style="padding: 6px 0 0 10px;">
+          <a href="/"><img src="/static/img/logo.png" alt="Debuggex Beta"/></a>
+        </div>
+        
+        <span class="caption">
+        <a href="/blog/" ng-click="noSeeRecentBlog = false">Blog</a>
+        <span ng-show="noSeeRecentBlog" style="color:red;font-weight:900">!</span>
+        </span>
+        <span class="caption">
+        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4">Tutorial</a>
+        </span>
+        <span class="caption">
+        <ul class="menu clearfix">
+          <li>
+            <a>Examples<i class="icon-caret-down" style="margin-right:-7px"></i></a>
+            <ul>
+              <li ng-repeat="example in examples">
+                <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        </span>
+        <span class="caption">
+        <a ng-click="saveRegex()">Share this Expression</a>
+        </span>
+      </div>
+      <div class="nav rfloat">
+        
+        <span class="caption">
+        <a id="signin" onClick="_track('Top nav login');" href="/login">Login or Sign up</a>
+        </span>
+      </div>
+    </div>
+    
+    <div class="sidepadded">
+      <div ng-model="re.w" class="slidearea {{re.w.cls}}"></div>
+      <div class="sa-message">
+        <span class="left-align" style="z-index:5;">
+        <label>
+          <input type="checkbox" ng-model="re.w.flags.i" class="flagcheck"/>
+          Ignore case (i)
+        </label>
+        <label style="margin-left: 15px">
+          <input type="checkbox" ng-model="re.w.flags.m" class="flagcheck"/>
+          ^$ match lines (m)
+        </label>
+        </span>
+        <span class="center-align error">
+        <span ng-show="reError">{{reError}}</span>
+        <span ng-hide="reError">&nbsp;</span>
+        </span>
+        <span class="right-align" style="z-index:5;">
+        <a ng-click="embed()" onclick="_track('embed');">Embed on StackOverflow</a>
+        </span>
+      </div>
+    </div>
+    <div class="flash-container newstip">
+      <div class="flash flash-success">
+        Please
+        <a target="_blank" onClick="_track('Newstip campaign')" href="http://www.igg.me/at/debuggex">fund additional features</a>
+        to help Debuggex get better.
+      </div>
+    </div>
+    <div class="sidepadded">
+      <nfa></nfa>
+      <div ng-model="strs[0].w" class="slidearea multi-slidearea {{strs[0].w.cls}}">
+      </div>
+      <div class="sa-message">
+        <span class="center-align">
+        <span ng-show="strs[0].w.groups.length > 0">
+        <span class="antierror">Matches</span>
+        </span>
+        <span ng-hide="strs[0].w.groups.length > 0">
+        <span class="error">Does not match</span>
+        </span>
+        </span>
+      </div>
+      <div class="centered-text" style="margin-top:10px">
+        <div class="otherinfo" style="width:49.7%;">
+          <div ng-show="strs[0].w.groups.length > 1">
+            Captured groups:
+            <div ng-repeat="(key, value) in strs[0].w.groups">
+              <div style="padding-left:10px">
+                {{key}}: "<span class="bigspace">{{value}}</span>"
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="otherinfo" style="width:49.7%;">
+          <div ng-show="strs.length > 1">
+            Some random matches:
+            <div class="error" ng-show="randError">
+              {{randError}}
+            </div>
+            <div ng-repeat="i in [1, 2]">
+              <div
+                ng-show="strs[i].w.cls"
+                ng-model="strs[i].w"
+                class="slidearea ro-slidearea {{strs[i].w.cls}}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-container">
+    </div>
+    <div style="width:95%;margin-top:50px;margin-left:auto;margin-right:auto;text-align:center;">
+      <div style="display:inline-block">
+        <span style="font-weight:700">Regex reference:</span>
+        <br/>
+        <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left">
+          <tbody>
+            <tr>
+              <td><span class="code">[abx-z]</span></td>
+              <td>One character of: a, b, or the range x-z</td>
+            </tr>
+            <tr>
+              <td><span class="code">[^abx-z]</span></td>
+              <td>One character except: a, b, or the range x-z</td>
+            </tr>
+            <tr>
+              <td><span class="code">a|b</span></td>
+              <td>a or b</td>
+            </tr>
+            <tr>
+              <td><span class="code">a?</span></td>
+              <td>Zero or one a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">a*</span></td>
+              <td>Zero or more a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">a+</span></td>
+              <td>One or more a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">a{4}</span></td>
+              <td>Exactly 4 a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">a{4,8}</span></td>
+              <td>Between (inclusive) 4 and 8 a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">a{9,}</span></td>
+              <td>9 or more a's</td>
+            </tr>
+            <tr>
+              <td><span class="code">(...)</span></td>
+              <td>A capturing group</td>
+            </tr>
+            <tr>
+              <td><span class="code">(?:...)</span></td>
+              <td>A non-capturing group</td>
+            </tr>
+            <tr>
+              <td><span class="code">(?=...)</span></td>
+              <td>A lookahead</td>
+            </tr>
+            <tr>
+              <td><span class="code">(?!...)</span></td>
+              <td>A negative lookahead</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">^</span></td>
+              <td>Beginning of the string</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">$</span></td>
+              <td>End of the string</td>
+            </tr>
+          </tbody>
+        </table>
+        <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left;">
+          <tbody>
+            <tr>
+              <td><span class="code code-escaped">\d</span></td>
+              <td>A digit (same as <span class="code">[0-9]</span>)</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\D</span></td>
+              <td>A non-digit (same as <span class="code">[^0-9]</span>)</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\w</span></td>
+              <td>A word character (same as <span class="code">[_a-zA-Z0-9]</span>)</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\W</span></td>
+              <td>
+                A non-word character (same as <span class="code">[^_a-zA-Z0-9]</span>)
+              </td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\s</span></td>
+              <td>A whitespace character</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\S</span></td>
+              <td>A non-whitespace character</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\b</span></td>
+              <td>A word boundary</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\B</span></td>
+              <td>A non-word boundary</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\n</span></td>
+              <td>A newline</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\t</span></td>
+              <td>A tab</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\cY</span></td>
+              <td>The control character with the hex code Y</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\xYY</span></td>
+              <td>The character with the hex code YY</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\uYYYY</span></td>
+              <td>The character with the hex code YYYY</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">.</span></td>
+              <td>Any character</td>
+            </tr>
+            <tr>
+              <td><span class="code code-escaped">\Y</span></td>
+              <td>The Y'th captured group</td>
+            </tr>
+          </tbody>
+        </table>
+        <br/>
+        <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions" target="_blank">Full regex reference</a>
+      </div>
+    </div>
+    <div style="margin-top:10px;max-width:600px;margin-left:auto;margin-right:auto;text-align:center;">
+      <a href="/libraries">Libraries</a>
+      |
+      <a href="mailto:debuggex@toarca.com">Contact</a>
+    </div>
+  </body>
+</html>
