@@ -135,10 +135,10 @@
       <div class="sa-message">
         <span class="center-align">
         <span ng-show="strs[0].w.groups.length > 0">
-        <span class="antierror">Matches</span>
+        <span class="antierror">比對成功</span>
         </span>
         <span ng-hide="strs[0].w.groups.length > 0">
-        <span class="error">Does not match</span>
+        <span class="error">比對失敗</span>
         </span>
         </span>
       </div>
@@ -155,7 +155,7 @@
         </div>
         <div class="otherinfo" style="width:49.7%;">
           <div ng-show="strs.length > 1">
-            Some random matches:
+            隨機比對:
             <div class="error" ng-show="randError">
               {{randError}}
             </div>
@@ -174,7 +174,7 @@
     </div>
     <div style="width:95%;margin-top:50px;margin-left:auto;margin-right:auto;text-align:center;">
       <div style="display:inline-block">
-        <span style="font-weight:700">Regex reference:</span>
+        <span style="font-weight:700">正規表示式參考資訊:</span>
         <br/>
         <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left">
           <tbody>
@@ -232,11 +232,11 @@
             </tr>
             <tr>
               <td><span class="code code-escaped">^</span></td>
-              <td>Beginning of the string</td>
+              <td>字串開始位置</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">$</span></td>
-              <td>End of the string</td>
+              <td>字串結束位置</td>
             </tr>
           </tbody>
         </table>
@@ -244,45 +244,45 @@
           <tbody>
             <tr>
               <td><span class="code code-escaped">\d</span></td>
-              <td>A digit (same as <span class="code">[0-9]</span>)</td>
+              <td>數字 (與<span class="code">[0-9]</span>表示式相同)</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\D</span></td>
-              <td>A non-digit (same as <span class="code">[^0-9]</span>)</td>
+              <td>非數字 (與<span class="code">[^0-9]</span>表示式相同)</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\w</span></td>
-              <td>A word character (same as <span class="code">[_a-zA-Z0-9]</span>)</td>
+              <td>字元 (與<span class="code">[_a-zA-Z0-9]</span>表示式相同)</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\W</span></td>
               <td>
-                A non-word character (same as <span class="code">[^_a-zA-Z0-9]</span>)
+                非字元 (與<span class="code">[^_a-zA-Z0-9]</span>表示式相同)
               </td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\s</span></td>
-              <td>A whitespace character</td>
+              <td>空白字元</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\S</span></td>
-              <td>A non-whitespace character</td>
+              <td>非空白字元</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\b</span></td>
-              <td>A word boundary</td>
+              <td>字元邊界</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\B</span></td>
-              <td>A non-word boundary</td>
+              <td>非字元邊界</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\n</span></td>
-              <td>A newline</td>
+              <td>換行</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\t</span></td>
-              <td>A tab</td>
+              <td>Tab</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\cY</span></td>
@@ -298,11 +298,11 @@
             </tr>
             <tr>
               <td><span class="code code-escaped">.</span></td>
-              <td>Any character</td>
+              <td>任何字元</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">\Y</span></td>
-              <td>The Y'th captured group</td>
+              <td>第Y個擷取比對到的字串群組</td>
             </tr>
           </tbody>
         </table>
