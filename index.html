@@ -8,124 +8,89 @@
     版權宣告(Copyright):歡迎轉載 請註明出處
   -->
   <head>
-    <link type="text/css" href="./static/css/main.css" rel="stylesheet"/>
-    
-    <script type="text/javascript" src="./static/js/main.js"></script>
-    
-    
+    <!-- 宣告 -->
     <meta charset="utf-8">
+    <meta name="description" content="Debuggex: 正規表示式視覺化測試器，讓你可以一步一步的了解正規表示式的運作流程 - 線上繁體中文版(譯者:KeJyun)，原版英文Debuggex : http://www.debuggex.com/" />
+    <meta name="keyword" content="Debuggex,正規表示式,Regex,Regular Expression,中文,繁體,測試器,視覺化,KeJyun,javascript,regex,regular expression,visual,nfa,dfa,state,debugger,helper,tester,match,random match" />
+    <meta name="author" content="Sergiu Toarca">
+    <meta name="translator_author" content="KeJyun">
     <title>
-    Debuggex: 正規表示式視覺化測試器 - 線上繁體中文版
+      Debuggex: 正規表示式視覺化測試器，讓你可以一步一步的了解正規表示式的運作流程 - 線上繁體中文版(譯者:KeJyun)，原版英文Debuggex : http://www.debuggex.com/
     </title>
     
-    <meta name="description" content="Debuggex allows you to figure out why your regular expression isn't working by walking through it step-by-step.">
-    <meta name="keywords" content="javascript,regex,regular expression,visual,nfa,dfa,state,debugger,helper,tester,match,random match">
-    <meta name="author" content="Sergiu Toarca">
+    <!-- Style -->
+    <link type="text/css" href="./static/css/main.css" rel="stylesheet"/>
     <link href="./favicon.ico" rel="shortcut icon"/>
-
-    
-    <script type="text/javascript" src="./static/js/include.js"></script>
-    <script type="text/javascript">$(function() {
-    $('#signin').click(function() { navigator.id.request({}); return false;});
-    $('#signout').click(function() { navigator.id.logout(); return false;});
-    var currentUser = null;
-    navigator.id.watch({
-    loggedInUser: currentUser,
-    onlogin: function(assertion) {
-    if (assertion) {
-    var $form = $("<form method=POST "+
-      "      action='/login'>" +
-      "  <input type='hidden' " +
-      "         name='assertion' " +
-      "         value='" + assertion + "' />" +
-      "  <input type='hidden' " +
-      "         name='came_from' "+
-      "         value='http://www.debuggex.com/' />" +
-      "  <input type='hidden' " +
-      "         name='csrf_token' "+
-      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
-    "</form>").appendTo($("body"));
-    $form.submit();
-    }
-    },
-    onlogout: function() {
-    var $form = $("<form method=POST "+
-      "      action='/logout'>" +
-      "  <input type='hidden' " +
-      "         name='came_from' "+
-      "         value='http://www.debuggex.com/' />" +
-      "  <input type='hidden' " +
-      "         name='csrf_token' "+
-      "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
-    "</form>").appendTo($("body"));
-    $form.submit();
-    }
-    });
-    });
-    </script>
-    <script type="text/javascript">pyramid_globals = {};</script>
   </head>
+  
   <body ng-controller="RegexCtrl">
+    <!-- Nav -->
     <div class="title-container clearfix">
       <div class="nav lfloat">
         <div class="lfloat" style="padding: 6px 0 0 10px;">
           <a href="./"><img src="./static/img/logo.png" alt="Debuggex Beta"/></a>
         </div>
         <span class="caption">
-        <a href="http://www.debuggex.com/" target="_blank">English Version</a>
+          <a href="http://www.debuggex.com/" target="_blank">English Version</a>
         </span>
         <span class="caption">
-        <a href="http://www.debuggex.com/blog/" target="_blank">官方部落格</a>
+          <a href="http://www.debuggex.com/blog/" target="_blank">官方部落格</a>
         </span>
         <span class="caption">
-        <a target="_blank" onClick="_track('Tutorial');" href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽</a>
+          <a href="http://www.youtube.com/watch?v=xyp7ASl5ss4" target="_blank">影片導覽</a>
         </span>
         <span class="caption">
-        <ul class="menu clearfix">
-          <li>
-            <a>範例 ▽</a>
-            <ul>
-              <li ng-repeat="example in examples">
-                <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
+          <ul class="menu clearfix">
+            <li>
+              <a>範例 ▽</a>
+              <ul>
+                <li ng-repeat="example in examples">
+                  <a onClick="_track('Click Example');" ng-click="setExample($index)">{{example.reTitle}}</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </span>
         <span class="caption">
-        <div class="fb-like" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-font="segoe ui" data-colorscheme="dark" data-action="recommend"></div>
+          <!-- Facebook like -->
+          <div class="fb-like" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-font="segoe ui" data-colorscheme="dark" data-action="recommend"></div>
         </span>
       </div>
       <div class="nav rfloat">
-        
+        <!-- Translator -->
         <span class="caption">
-          <a href="http://blog.kejyun.com/" target="_blank">譯者(KeJyun)</a>
+          <a href="http://blog.kejyun.com/" target="_blank">KeJyun(譯者)</a>
+        </span>
+      </div>
+      <div class="nav rfloat">
+        <!-- Translator -->
+        <span class="caption">
+          <a href="http://www.igg.me/at/debuggex" target="_blank">Sergiu Toarca(作者)</a>
         </span>
       </div>
     </div>
     
+    <!-- Content -->
     <div class="sidepadded">
       <div ng-model="re.w" class="slidearea {{re.w.cls}}"></div>
       <div class="sa-message">
         <span class="left-align" style="z-index:5;">
-        <label>
-          <input type="checkbox" ng-model="re.w.flags.i" class="flagcheck"/>
-          忽略大小寫 (i)
-        </label>
-        <label style="margin-left: 15px">
-          <input type="checkbox" ng-model="re.w.flags.m" class="flagcheck"/>
-          ^$ 比對每一行 (m)
-        </label>
+          <label>
+            <input type="checkbox" ng-model="re.w.flags.i" class="flagcheck"/> 忽略大小寫 (i)
+          </label>
+          <label style="margin-left: 15px">
+            <input type="checkbox" ng-model="re.w.flags.m" class="flagcheck"/> ^$ 比對每一行 (m)
+          </label>
         </span>
         <span class="center-align error">
-        <span ng-show="reError">{{reError}}</span>
-        <span ng-hide="reError">&nbsp;</span>
+          <span ng-show="reError">{{reError}}</span>
+          <span ng-hide="reError">&nbsp;</span>
         </span>
       </div>
     </div>
     <div class="flash-container newstip">
       <div class="flash flash-success">
-        <a target="_blank" onClick="_track('Newstip campaign')" href="http://www.igg.me/at/debuggex">贊助</a>
+        <a target="_blank" href="http://www.igg.me/at/debuggex">贊助</a>
         Debuggex原作者，讓Debuggex更加完善。
       </div>
     </div>
@@ -135,12 +100,12 @@
       </div>
       <div class="sa-message">
         <span class="center-align">
-        <span ng-show="strs[0].w.groups.length > 0">
-        <span class="antierror">比對成功</span>
-        </span>
-        <span ng-hide="strs[0].w.groups.length > 0">
-        <span class="error">比對失敗</span>
-        </span>
+          <span ng-show="strs[0].w.groups.length > 0">
+            <span class="antierror">比對成功</span>
+          </span>
+          <span ng-hide="strs[0].w.groups.length > 0">
+            <span class="error">比對失敗</span>
+          </span>
         </span>
       </div>
       <div class="centered-text" style="margin-top:10px">
@@ -171,8 +136,11 @@
         </div>
       </div>
     </div>
+    
     <div class="flash-container">
     </div>
+    
+    <!-- Regex Info -->
     <div style="width:95%;margin-top:50px;margin-left:auto;margin-right:auto;text-align:center;">
       <div style="display:inline-block">
         <span style="font-weight:700">正規表示式參考資訊:</span>
@@ -241,6 +209,7 @@
             </tr>
           </tbody>
         </table>
+        
         <table style="display:inline-block;vertical-align:top;margin-left:10px;text-align:left;">
           <tbody>
             <tr>
@@ -308,9 +277,14 @@
           </tbody>
         </table>
         <br/>
-        <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions" target="_blank">完整正規表示式參照</a>
+        
+        <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions" target="_blank">
+          完整正規表示式參照
+        </a>
       </div>
     </div>
+    
+    <!-- Footer -->
     <div style="margin-top:10px;max-width:600px;margin-left:auto;margin-right:auto;text-align:center;">
       <a href="http://www.debuggex.com/libraries" target="_blank">函式庫</a>
       |
@@ -318,6 +292,51 @@
       |
       <a href="http://blog.kejyun.com" target="_blank">譯者KeJyun部落格</a>
     </div>
+    
+    <!-- JS -->
+    <script type="text/javascript" src="./static/js/main.js"></script>
+    <script type="text/javascript" src="./static/js/include.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $('#signin').click(function() { navigator.id.request({}); return false;});
+        $('#signout').click(function() { navigator.id.logout(); return false;});
+        var currentUser = null;
+        navigator.id.watch({
+        loggedInUser: currentUser,
+        onlogin: function(assertion) {
+          if (assertion) {
+            var $form = $("<form method=POST "+
+              "      action='/login'>" +
+              "  <input type='hidden' " +
+              "         name='assertion' " +
+              "         value='" + assertion + "' />" +
+              "  <input type='hidden' " +
+              "         name='came_from' "+
+              "         value='http://www.debuggex.com/' />" +
+              "  <input type='hidden' " +
+              "         name='csrf_token' "+
+              "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
+            "</form>").appendTo($("body"));
+            $form.submit();
+          }
+        },
+        onlogout: function() {
+            var $form = $("<form method=POST "+
+              "      action='/logout'>" +
+              "  <input type='hidden' " +
+              "         name='came_from' "+
+              "         value='http://www.debuggex.com/' />" +
+              "  <input type='hidden' " +
+              "         name='csrf_token' "+
+              "         value='c1ffb9e2f73ed07a96015ab02f097a670d1b226d' />" +
+            "</form>").appendTo($("body"));
+            $form.submit();
+          }
+        });
+      });
+    </script>
+    <script type="text/javascript">pyramid_globals = {};</script>
+    <!-- Google Adsense -->
     <div class="center_block" style="margin-top: 50px;width:480px;">
       <script type="text/javascript"><!--
       google_ad_client = "ca-pub-1990193713845546";
@@ -334,7 +353,7 @@
     <div class="center_block" style="margin-top: 50px;">
       <div class="fb-comments" data-href="http://kejyun.github.io/Debuggex-Chinese-Traditional/" data-width="660" data-num-posts="20"></div>
     </div>
-    
+    <!-- Facebook Comment -->
     <div id="fb-root"></div>
     <script>(function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
@@ -352,6 +371,5 @@
       ga('create', 'UA-31063691-5', 'kejyun.github.io');
       ga('send', 'pageview');
     </script>
-
   </body>
 </html>
