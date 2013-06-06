@@ -196,20 +196,20 @@
               <td>9張以上A士(a)s</td>
             </tr>
             <tr>
-              <td><span class="code">(...)</span></td>
+              <td><span class="code">(pattern)</span></td>
               <td>擷取比對到的字串群組</td>
             </tr>
             <tr>
-              <td><span class="code">(?:...)</span></td>
+              <td><span class="code">(?:pattern)</span></td>
               <td>不擷取比對到的字串群組</td>
             </tr>
             <tr>
-              <td><span class="code">(?=...)</span></td>
-              <td>A lookahead</td>
+              <td><span class="code">(?=pattern)</span></td>
+              <td>符合比對</td>
             </tr>
             <tr>
-              <td><span class="code">(?!...)</span></td>
-              <td>A negative lookahead</td>
+              <td><span class="code">(?!pattern)</span></td>
+              <td>符合比對</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">^</span></td>
@@ -267,24 +267,24 @@
               <td>Tab</td>
             </tr>
             <tr>
-              <td><span class="code code-escaped">\cY</span></td>
-              <td>The control character with the hex code Y</td>
+              <td><span class="code code-escaped">\cX</span></td>
+              <td>比對由X指定的控制字元</td>
             </tr>
             <tr>
-              <td><span class="code code-escaped">\xYY</span></td>
-              <td>The character with the hex code YY</td>
+              <td><span class="code code-escaped">\xXX</span></td>
+              <td>比對XX，其中XX為16進制</td>
             </tr>
             <tr>
-              <td><span class="code code-escaped">\uYYYY</span></td>
-              <td>The character with the hex code YYYY</td>
+              <td><span class="code code-escaped">\uXXXX</span></td>
+              <td>比對XXXX，其中XXXX是用4個16進制表示的Unicode字元</td>
             </tr>
             <tr>
               <td><span class="code code-escaped">.</span></td>
               <td>任何字元</td>
             </tr>
             <tr>
-              <td><span class="code code-escaped">\Y</span></td>
-              <td>第Y個擷取比對到的字串群組</td>
+              <td><span class="code code-escaped">\X</span></td>
+              <td>第X個擷取比對到的字串群組</td>
             </tr>
           </tbody>
         </table>
@@ -292,7 +292,11 @@
         
         <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Regular_Expressions" target="_blank">
           完整正規表示式參照
-        </a>
+        </a> 
+        |
+        <a href="https://zh.wikipedia.org/zh-tw/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank">
+          正規表示式 wiki
+        </a> 
       </div>
     </div>
     
